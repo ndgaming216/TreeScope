@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#172331" />
+  <meta name="description" content="TreeScope — Interactive Binary Search Tree Visualizer. Learn data structures visually." />
+  <title>TreeScope — Interactive BST Visualizer</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <!-- Lightweight reusable icons: no external icon library required. -->
+  <svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-tree" viewBox="0 0 48 48"><path d="M24 7v7m0 0-13 12m13-12 13 12M11 26v8m26-8v8M11 34l-5 7m5-7 5 7m21-7-5 7m5-7 5 7"/><circle cx="24" cy="7" r="5"/><circle cx="11" cy="26" r="5"/><circle cx="37" cy="26" r="5"/><circle cx="6" cy="41" r="4"/><circle cx="16" cy="41" r="4"/><circle cx="32" cy="41" r="4"/><circle cx="42" cy="41" r="4"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M18.4 5.6l-2.1 2.1m-8.6 8.6-2.1 2.1"/><circle cx="12" cy="12" r="4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 10v7m4-7v7"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.7" cy="10.7" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 0 4M4 4v6h6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7V5Z"/></symbol>
+    <symbol id="i-step" viewBox="0 0 24 24"><path d="m3 5 9 7-9 7V5Zm10 0 9 7-9 7V5Z"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M9 5h12M9 12h12M9 19h12M3 5h2M3 12h2M3 19h2"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V9h4v11m4 0V4h4v16m4 0v-8h3v8M2 20h21"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5c-3-2-7-2-10-1v15c4-1 7-1 10 1m0-15c3-2 7-2 10-1v15c-4-1-7-1-10 1m0-15v15"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 1 6M3 4v6h6m3-4v6l4 3"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9h-6v-7H9v7H3z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 2.5 7.5L22 12l-7.5 2.5L12 22l-2.5-7.5L2 12l7.5-2.5z"/></symbol>
+    <symbol id="i-fit" viewBox="0 0 24 24"><path d="M9 3H3v6m12-6h6v6M3 15v6h6m12-6v6h-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12 5 5L20 6"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M4 12h16"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5M3 16l9 5 9-5"/></symbol>
+  </svg>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><svg class="logo"><use href="#i-tree"/></svg></span>
+      <span class="brand-title-group"><span class="brand-name">Tree<span>Scope</span></span><span class="brand-tagline">Interactive Binary Search Tree Visualizer</span></span>
+    </div>
+    <nav class="topnav" aria-label="Main navigation">
+      <a href="#visualizer" class="nav-active" aria-current="page"><svg class="icon"><use href="#i-home"/></svg> Visualizer</a>
+      <button type="button" data-dialog="about-dialog"><svg class="icon"><use href="#i-info"/></svg> About</button>
+      <button type="button" data-dialog="guide-dialog"><svg class="icon"><use href="#i-book"/></svg> How It Works</button>
+      <button type="button" class="nav-future" id="examples-nav" title="Open learning presets"><svg class="icon"><use href="#i-spark"/></svg> Examples</button>
+    </nav>
+  </header>
+
+  <main class="app-grid" id="visualizer">
+    <section class="rail rail-left" aria-label="Tree controls and statistics">
+      <div class="card operations-card">
+        <div class="section-heading"><span class="section-icon coral"><svg class="icon"><use href="#i-settings"/></svg></span><div><h2>BST Operations</h2><p>Perform operations and visualize step by step.</p></div></div>
+        <label class="visually-hidden" for="node-value">Node value</label>
+        <input id="node-value" type="number" inputmode="numeric" placeholder="Enter value (e.g. 50)" step="1" aria-describedby="operations-status" />
+        <div class="button-grid">
+          <button class="action-btn btn-coral" id="btn-insert"><svg class="icon"><use href="#i-plus"/></svg> Insert</button>
+          <button class="action-btn" id="btn-delete"><svg class="icon"><use href="#i-trash"/></svg> Delete</button>
+          <button class="action-btn" id="btn-search"><svg class="icon"><use href="#i-search"/></svg> Search</button>
+          <button class="action-btn" id="btn-clear"><svg class="icon"><use href="#i-reset"/></svg> Clear Tree</button>
+        </div>
+        <div class="inner-divider"></div>
+        <h3 class="field-heading">Animate Traversal</h3>
+        <div class="traversal-actions">
+          <button id="run-inorder">Inorder</button><button id="run-preorder">Preorder</button><button id="run-postorder">Postorder</button>
+        </div>
+        <div class="inner-divider"></div>
+        <h3 class="field-heading">Tree Management</h3>
+        <div class="manage-row"><label for="random-count">Nodes</label><input type="number" id="random-count" min="1" max="15" value="7"><button class="mini-btn" id="btn-random">Random Tree</button><button class="mini-btn" id="btn-reset">Reset Sample</button></div>
+        <label class="field-heading" for="preset-select">Learning Presets</label>
+        <div class="manage-row"><select id="preset-select"><option value="" selected>Select an example</option><option value="balanced">Balanced tree</option><option value="left">Left-skewed tree</option><option value="right">Right-skewed tree</option><option value="deletion">Two-child deletion example</option></select><button class="mini-btn" id="btn-preset">Load</button></div>
+        <p class="phase-note" id="operations-status" role="status" aria-live="polite">Ready. Enter a value or choose a traversal.</p>
+      </div>
+
+      <div class="card stats-card">
+        <div class="section-heading"><span class="section-icon orange"><svg class="icon"><use href="#i-chart"/></svg></span><div><h2>Tree Statistics</h2><p>Information about the current tree.</p></div></div>
+        <div class="stats-grid">
+          <div class="stat-tile"><span>Total Nodes</span><strong id="stat-nodes">—</strong></div>
+          <div class="stat-tile"><span>Height <small>(edges)</small></span><strong id="stat-height">—</strong></div>
+          <div class="stat-tile"><span>Leaf Nodes</span><strong id="stat-leaves">—</strong></div>
+          <div class="stat-tile"><span>Internal Nodes</span><strong id="stat-internal">—</strong></div>
+          <div class="stat-tile"><span>Minimum Value</span><strong id="stat-min">—</strong></div>
+          <div class="stat-tile"><span>Maximum Value</span><strong id="stat-max">—</strong></div>
+        </div>
+        <div class="stat-secondary"><span>Levels</span><strong id="stat-levels">—</strong></div>
+        <div class="stat-secondary"><span>Height-balanced?</span><strong class="balance-indicator" id="stat-balanced">—</strong></div>
+      </div>
+
+      <div class="card complexity-card">
+        <div class="section-heading"><span class="section-icon orange"><svg class="icon"><use href="#i-clock"/></svg></span><div><h2>Time Complexity</h2><p>Common BST operations.</p></div></div>
+        <div class="complexity-grid">
+          <div><span>Insert</span><strong>O(h)</strong></div>
+          <div><span>Delete</span><strong>O(h)</strong></div>
+          <div><span>Search</span><strong>O(h)</strong></div>
+          <div><span>Traversal</span><strong>O(n)</strong></div>
+        </div>
+        <p class="complexity-hint"><strong>h</strong> = tree height; <strong>n</strong> = number of nodes. A skewed tree can take O(n) to search.</p>
+      </div>
+    </section>
+
+    <section class="card visualizer-card" aria-label="BST visualization workspace">
+      <div class="canvas-heading">
+        <div class="section-heading"><span class="section-icon coral"><svg class="icon"><use href="#i-tree"/></svg></span><div><h1>Binary Search Tree Visualization</h1><p>Explore the structure of a Binary Search Tree.</p></div></div>
+        <div class="canvas-top-actions"><button class="action-btn btn-coral" id="btn-play"><svg class="icon"><use href="#i-play"/></svg><span id="play-text">Play</span></button><button class="action-btn" id="btn-prev" title="Previous step">◀ Previous</button><button class="action-btn" id="btn-next"><svg class="icon"><use href="#i-step"/></svg> Next</button><button class="action-btn" id="fit-top"><svg class="icon"><use href="#i-fit"/></svg> Fit</button></div>
+      </div>
+      <div class="tree-stage" id="tree-stage">
+        <div class="canvas-overline"><span class="canvas-status"><span class="status-dot"></span><span id="canvas-state">Sample BST</span></span><span class="canvas-hint">Drag to pan · Use +/− to zoom</span></div>
+        <svg id="tree-svg" class="tree-svg" viewBox="0 0 960 600" role="img" aria-label="Binary Search Tree containing the values 50, 30, 70, 20, 40, 60, and 80. Drag to pan the diagram.">
+          <!-- Rendered from the real BST node model in app.js. -->
+        </svg>
+        <div class="comparison-stage" id="comparison-stage" hidden>
+          <div class="comparison-grid"><div><h3>Balanced BST</h3><svg id="balanced-svg" viewBox="0 0 430 345"></svg><p id="balanced-result">Ready</p></div><div><h3>Right-skewed BST</h3><svg id="skewed-svg" viewBox="0 0 430 345"></svg><p id="skewed-result">Ready</p></div></div>
+        </div>
+        <div class="canvas-bottom-bar">
+          <div class="legend"><span><i class="legend-node normal"></i> Normal Node</span><span><i class="legend-node active"></i> Active / Visited</span><span><i class="legend-line"></i> Child Link</span></div>
+          <div class="zoom-actions" aria-label="Visualization zoom controls"><button type="button" id="zoom-out" aria-label="Zoom out" title="Zoom out"><svg class="icon"><use href="#i-minus"/></svg></button><output id="zoom-label">100%</output><button type="button" id="zoom-in" aria-label="Zoom in" title="Zoom in"><svg class="icon"><use href="#i-plus"/></svg></button><button type="button" id="fit-bottom" aria-label="Fit tree to screen" title="Fit tree to screen"><svg class="icon"><use href="#i-fit"/></svg></button></div>
+        </div>
+      </div>
+      <div class="animation-footer"><button class="mini-btn" id="btn-restart">↻ Restart</button><button class="mini-btn" id="btn-compare">Compare Trees</button><label for="speed">Speed</label><select id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select><span id="step-label">Ready</span><progress id="progress" value="0" max="1"></progress></div>
+    </section>
+
+    <section class="rail rail-right" aria-label="Algorithm explanation and results">
+      <div class="card explanation-card">
+        <div class="section-heading"><span class="section-icon peach"><svg class="icon"><use href="#i-book"/></svg></span><div><h2>Algorithm Explanation</h2><p>Understand how a Binary Search Tree works.</p></div></div>
+        <div class="explanation-box"><strong id="explanation-title">Tree initialized</strong><p id="explanation-text">The sample tree is ready. In a BST, smaller values go left and greater values go right.</p></div>
+        <div class="code-explanation"><strong>Algorithm pseudocode</strong><pre id="pseudo-code">Select an operation to see its pseudocode.</pre></div>
+      </div>
+
+      <div class="card traversal-card">
+        <div class="section-heading"><span class="section-icon lavender"><svg class="icon"><use href="#i-list"/></svg></span><div><h2>Traversal Result</h2><p>Explore traversal order and animated recursive execution.</p></div></div>
+        <div class="result-tabs" role="tablist" aria-label="Traversal order"><button type="button" class="selected" role="tab" aria-selected="true" data-order="inorder">Inorder</button><button type="button" role="tab" aria-selected="false" data-order="preorder">Preorder</button><button type="button" role="tab" aria-selected="false" data-order="postorder">Postorder</button></div>
+        <div class="result-value" id="traversal-result" role="tabpanel" aria-live="polite">—</div>
+        <p class="results-note" id="results-note">Click a traversal button on the left to animate recursive calls and node processing.</p>
+      </div>
+
+      <div class="card history-card">
+        <div class="section-heading"><span class="section-icon orange"><svg class="icon"><use href="#i-history"/></svg></span><div><h2>Operation History</h2><p>Track operations performed on your BST.</p></div></div>
+        <div class="history-toolbar"><span id="history-count">0 operations</span><button id="clear-history" class="mini-btn">Clear History</button></div><div id="history-list" class="history-list"><p class="history-empty">No operations yet.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer"><span>TreeScope — Interactive BST Visualizer</span><span>Built with HTML · CSS · JavaScript · SVG</span></footer>
+
+  <dialog id="about-dialog" class="info-dialog"><form method="dialog"><button class="dialog-close" aria-label="Close">×</button></form><h2>About TreeScope</h2><p>TreeScope is an original Data Structures learning project designed to explain Binary Search Trees using interactive visualization and detailed algorithm animations.</p><p>TreeScope includes insertion, deletion, searching, recursive traversals, linear animation controls, interactive tree comparison and learning presets.</p></dialog>
+  <dialog id="guide-dialog" class="info-dialog"><form method="dialog"><button class="dialog-close" aria-label="Close">×</button></form><h2>How a BST Works</h2><p>A Binary Search Tree is a binary tree where every node's left subtree contains smaller values and its right subtree contains greater values.</p><p>Our example starts with 50 as the root, 30 to its left and 70 to its right. The initial tree has seven unique nodes and height 2 (measured in edges).</p><p>Use Insert, Delete and Search to explore the algorithm. Traversal buttons show recursive calls and backtracking. Pause and advance through steps using the controls above the playground.</p></dialog>
+</body>
+</html>
